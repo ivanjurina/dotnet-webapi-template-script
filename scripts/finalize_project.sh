@@ -1,12 +1,13 @@
 # finalize_project.sh
 #!/bin/bash
 PROJECT_NAME=$1
+WITH_USER=$2
 
-cat > Program.cs << EOF
-using Microsoft.EntityFrameworkCore;
-using $PROJECT_NAME.DataModel;
-using $PROJECT_NAME.Repositories;
-using $PROJECT_NAME.Services;
+# Update the existing Program.cs
+printf "%s" "using Microsoft.EntityFrameworkCore;
+using ${PROJECT_NAME}.DataModel;
+using ${PROJECT_NAME}.Repositories;
+using ${PROJECT_NAME}.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,26 +16,31 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("$PROJECT_NAME"));
+    options.UseInMemoryDatabase(\"${PROJECT_NAME}\"));
 
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<UserService>();
+// Register base services
+builder.Services.AddScoped<IBaseRepository, BaseRepository>();
+builder.Services.AddScoped<IBaseService, BaseService>();
+
+$(if [ "$WITH_USER" = true ]; then
+echo '// Register User services
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();'
+fi)
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "$PROJECT_NAME API V1");
-    c.RoutePrefix = string.Empty;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
-EOF
+app.Run();" > "Program.cs"
 
 # Add packages and ensure proper restore
 dotnet add package Microsoft.EntityFrameworkCore.InMemory --no-restore
