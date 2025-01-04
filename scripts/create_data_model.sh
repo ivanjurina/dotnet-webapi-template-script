@@ -21,6 +21,9 @@ namespace ${PROJECT_NAME}.DataModel.Entities
         
         [Required]
         public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string PasswordHash { get; set; } = string.Empty;
     }
 }" > "DataModel/Entities/User.cs"
 fi
@@ -36,7 +39,6 @@ namespace ${PROJECT_NAME}.DataModel
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         $(if [ "$WITH_USER" = true ]; then
@@ -47,11 +49,16 @@ namespace ${PROJECT_NAME}.DataModel
         {
             $(if [ "$WITH_USER" = true ]; then
             echo "modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
             
             // Seed some data
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Username = \"user1\", Email = \"user1@example.com\" },
-                new User { Id = 2, Username = \"user2\", Email = \"user2@example.com\" }
+                new User { 
+                    Id = 1, 
+                    Username = \"user1\", 
+                    Email = \"user1@example.com\",
+                    PasswordHash = \"AQAAAAIAAYagAAAAELbHLYHoYyLgK+nqcqLZK5KHAUPvXZr6OxHPCYz8HGSyZvw+WVGQmH/+FyUyX1B/vw==\" // Password: Test123!
+                }
             );"
             fi)
         }

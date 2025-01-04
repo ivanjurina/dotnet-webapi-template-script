@@ -46,6 +46,8 @@ namespace ${PROJECT_NAME}.Repositories
     {
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(int id);
+        Task<User> GetByUsername(string username);
+        Task<User> GetByEmail(string email);
         Task Add(User user);
         Task Update(User user);
         Task Delete(User user);
@@ -58,6 +60,16 @@ namespace ${PROJECT_NAME}.Repositories
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<User> GetByUsername(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<IEnumerable<User>> GetAll()
@@ -173,14 +185,16 @@ namespace ${PROJECT_NAME}.Services
     }
 }" > "Services/UserService.cs"
 
-# Add User controller
+# Add User controller with authorization
 mkdir -p "Controllers"
 printf "%s" "using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ${PROJECT_NAME}.Services;
 using ${PROJECT_NAME}.Contracts;
 
 namespace ${PROJECT_NAME}.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route(\"api/[controller]\")]
     public class UserController : ControllerBase
