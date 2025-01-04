@@ -20,7 +20,7 @@ To set up and run the project:
 
    Basic usage:
    ```bash
-   ./main.sh
+   ./main.sh <project-name>
    ```
 
    Available options:
@@ -30,11 +30,10 @@ To set up and run the project:
      ./main.sh --with-user
      ```
      This will:
-     - Add JWT authentication
-     - Create user registration and login endpoints
-     - Set up password hashing
-     - Add role-based authorization
-     - Generate user profile management
+     - Create Entity, Dto, Repository, Service and Controller for User
+     - CRUD endpoints on User Controller
+     - Register Repository and Service with DI in Program.cs
+     - Register User entity in DbContext
 
    - `--run`: Automatically builds and runs the project after setup
      ```bash
@@ -48,12 +47,12 @@ To set up and run the project:
 
    Combine options:
    ```bash
-   ./main.sh --with-user --run
+   ./main.sh <project-name> --with-user --run
    ```
 
 4. After completion, if you didn't use --run, start the API manually:
    ```bash
-   cd YourProjectName
+   cd <project-name>
    dotnet run
    ```
 
@@ -63,8 +62,6 @@ To set up and run the project:
    ```
 
 Note: Make sure you have .NET SDK installed on your system before running the script.
-
-
 
 
 ## Project Structure
