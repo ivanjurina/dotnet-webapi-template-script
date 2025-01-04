@@ -3,29 +3,69 @@
 A .NET Web API template with layered architecture and clean code structure.
 
 ## Setup
+To set up and run the project:
 
-1. Save the script:
-```bash
-save as create-api.sh
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/dotnet-webapi-template-script.git
+   cd dotnet-webapi-template-script
+   ```
 
-2. Make executable:
-```bash
-chmod +x create-api.sh
-```
+2. Make the script executable:
+   ```bash
+   chmod +x main.sh
+   ```
 
-3. Run script:
-```bash
-./create-api.sh YourProjectName
-```
+3. Run the setup script with available options:
 
-4. Navigate to project and run:
-```bash
-cd YourProjectName/YourProjectName
-dotnet run
-```
+   Basic usage:
+   ```bash
+   ./main.sh
+   ```
 
-Swagger UI will open automatically at `https://localhost:5001`
+   Available options:
+   
+   - `--with-user`: Generates additional user authentication and authorization features
+     ```bash
+     ./main.sh --with-user
+     ```
+     This will:
+     - Add JWT authentication
+     - Create user registration and login endpoints
+     - Set up password hashing
+     - Add role-based authorization
+     - Generate user profile management
+
+   - `--run`: Automatically builds and runs the project after setup
+     ```bash
+     ./main.sh --run
+     ```
+     This will:
+     - Complete the setup process
+     - Build the solution
+     - Start the API server
+     - Open Swagger UI in default browser
+
+   Combine options:
+   ```bash
+   ./main.sh --with-user --run
+   ```
+
+4. After completion, if you didn't use --run, start the API manually:
+   ```bash
+   cd YourProjectName
+   dotnet run
+   ```
+
+5. Access Swagger UI at:
+   ```
+   https://localhost:5001/swagger
+   ```
+
+Note: Make sure you have .NET SDK installed on your system before running the script.
+
+
+
 
 ## Project Structure
 
